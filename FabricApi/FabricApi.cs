@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Fabric;
+using System.Fabric.Management.ServiceModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.ServiceFabric.AspNetCore.Configuration;
 using Microsoft.ServiceFabric.Services.Communication.AspNetCore;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Runtime;
@@ -39,7 +41,8 @@ namespace FabricApi
 
                         return new WebHostBuilder()
                                     .UseKestrel()
-                                    .ConfigureAppConfiguration(builder => builder.AddServiceFabricConfiguration())
+                                    .ConfigureAppConfiguration(builder => builder.AddServiceFabricConfiguration(FabricRuntime.GetActivationContext(), options => options.IncludePackageName = false))
+                                    //.ConfigureAppConfiguration(builder => builder.AddTestServiceFabricConfiguration())
                                     //.UseConfiguration(new ConfigurationBuilder().AddServiceFabricConfiguration().Build())
                                     .ConfigureServices(
                                         services => services
@@ -77,7 +80,7 @@ namespace FabricApi
 
     public static class ServiceFabricConfigurationExtensions
     {
-        public static IConfigurationBuilder AddServiceFabricConfiguration(this IConfigurationBuilder builder)
+        public static IConfigurationBuilder AddTestServiceFabricConfiguration(this IConfigurationBuilder builder)
         {
             builder.Add(new ServiceFabricConfigurationSource());
             return builder;
