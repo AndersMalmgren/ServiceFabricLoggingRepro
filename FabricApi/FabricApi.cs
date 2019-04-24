@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -39,19 +40,19 @@ namespace FabricApi
                     {
                         ServiceEventSource.Current.ServiceMessage(serviceContext, $"Starting Kestrel on {url}");
 
-                        return new WebHostBuilder()
-                                    .UseKestrel()
-                                    .ConfigureAppConfiguration(builder => builder.AddServiceFabricConfiguration(FabricRuntime.GetActivationContext(), options => options.IncludePackageName = false))
-                                    //.ConfigureAppConfiguration(builder => builder.AddTestServiceFabricConfiguration())
-                                    //.UseConfiguration(new ConfigurationBuilder().AddServiceFabricConfiguration().Build())
-                                    .ConfigureServices(
-                                        services => services
-                                            .AddSingleton<StatelessServiceContext>(serviceContext))
-                                    .UseContentRoot(Directory.GetCurrentDirectory())
-                                    .UseStartup<Startup>()
-                                    .UseServiceFabricIntegration(listener, ServiceFabricIntegrationOptions.None)
-                                    .UseUrls(url)
-                                    .Build();
+                        return WebHost.CreateDefaultBuilder(new string[0])
+                            .UseKestrel()
+                            .ConfigureAppConfiguration(builder => builder.AddServiceFabricConfiguration(FabricRuntime.GetActivationContext(), options => options.IncludePackageName = false))
+                            //.ConfigureAppConfiguration(builder => builder.AddTestServiceFabricConfiguration())
+                            //.UseConfiguration(new ConfigurationBuilder().AddServiceFabricConfiguration().Build())
+                            .ConfigureServices(
+                                services => services
+                                    .AddSingleton<StatelessServiceContext>(serviceContext))
+                            .UseContentRoot(Directory.GetCurrentDirectory())
+                            .UseStartup<Startup>()
+                            .UseServiceFabricIntegration(listener, ServiceFabricIntegrationOptions.None)
+                            .UseUrls(url)
+                            .Build();
                     }))
             };
         }
@@ -64,7 +65,6 @@ namespace FabricApi
         {
             Data["Logging:LogLevel:Default"] = "Information";
             Data["Logging:Debug:LogLevel:Default"] = "Information";
-            
         }
     }
 

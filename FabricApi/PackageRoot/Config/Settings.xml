@@ -5,6 +5,11 @@
   <Section Name="Logging">
     <Parameter Name="LogLevel:Default" Value="Information" />
     <Parameter Name="Debug:LogLevel:Default" Value="Information" />
+    <Parameter Name="ApplicationInsights:LogLevel:Default" Value="Information" />
+  </Section>
+
+  <Section Name="ApplicationInsights">
+    <Parameter Name="InstrumentationKey" Value="8575e2c9-c377-46de-831c-3bd88e25b846"/>
   </Section>
   
 </Settings>
